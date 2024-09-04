@@ -1,1 +1,1 @@
-# Leetcode-PTOD
+# Leetcode-POTD
