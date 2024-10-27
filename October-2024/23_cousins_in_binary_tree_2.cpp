@@ -88,3 +88,68 @@ public:
         return root;
     }
 };
+
+
+
+
+// --------- SOLUTION IN ONE PASS  ---------
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* replaceValueInTree(TreeNode* root) {
+        if(!root) return root;
+
+        queue<TreeNode*> q;
+        
+        // Initial state
+        q.push(root);
+        int levelSum = root->val;
+
+        // BFS
+        while(!q.empty()){
+            int n = q.size();
+            int nextLevelSum = 0;
+
+            while(n--){
+                TreeNode* frontNode = q.front();
+                q.pop();
+
+                // update the node
+                frontNode->val = levelSum - frontNode->val;
+
+                // calculate the sibling sum of the next level
+                int siblingSum = 0;
+                if(frontNode->left) siblingSum += frontNode->left->val;
+                if(frontNode->right) siblingSum += frontNode->right->val;
+                    
+
+                if(frontNode->left){
+                    nextLevelSum += frontNode->left->val;
+                    frontNode->left->val = siblingSum;
+                    q.push(frontNode->left);
+                }
+                if(frontNode->right){
+                    nextLevelSum += frontNode->right->val;
+                    frontNode->right->val = siblingSum;
+                    q.push(frontNode->right);
+                }
+            }
+            levelSum = nextLevelSum;
+            nextLevelSum = 0;
+        }
+        
+
+        return root;
+    }
+};
